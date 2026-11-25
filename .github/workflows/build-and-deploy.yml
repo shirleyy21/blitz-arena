@@ -77,7 +77,7 @@ jobs:
             target/idl/blitz_arena.json
 
       - name: Deploy to Solana Devnet (optional workflow_dispatch)
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy_devnet == 'true' }}
+        if: ${{ (github.event_name == 'workflow_dispatch' && inputs.deploy_devnet == 'true') || contains(github.event.head_commit.message, '[deploy-devnet]') }}
         env:
           SOLANA_DEPLOYER_KEYPAIR: ${{ secrets.SOLANA_DEPLOYER_KEYPAIR }}
           PROGRAM_KEYPAIR: ${{ secrets.PROGRAM_KEYPAIR }}

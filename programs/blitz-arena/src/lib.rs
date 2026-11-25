@@ -53,7 +53,7 @@ pub mod blitz_arena {
 
         if entry_fee_lamports > 0 {
             let cpi_ctx = CpiContext::new(
-                ctx.accounts.system_program.to_account_info(),
+                ctx.accounts.system_program.key(),
                 Transfer {
                     from: ctx.accounts.creator.to_account_info(),
                     to: ctx.accounts.vault.to_account_info(),
@@ -115,7 +115,7 @@ pub mod blitz_arena {
         let fee = arena.entry_fee_lamports;
         if fee > 0 {
             let cpi_ctx = CpiContext::new(
-                ctx.accounts.system_program.to_account_info(),
+                ctx.accounts.system_program.key(),
                 Transfer {
                     from: ctx.accounts.player.to_account_info(),
                     to: ctx.accounts.vault.to_account_info(),
@@ -400,7 +400,7 @@ pub mod blitz_arena {
         let signer_seeds: &[&[&[u8]]] = &[&[VAULT_SEED, &id_bytes, &vault_bump]];
 
         let cpi_ctx = CpiContext::new_with_signer(
-            ctx.accounts.system_program.to_account_info(),
+            ctx.accounts.system_program.key(),
             Transfer {
                 from: ctx.accounts.vault.to_account_info(),
                 to: ctx.accounts.winner.to_account_info(),

@@ -21,6 +21,16 @@ custom-panic = []
 
 [dependencies]
 anchor-lang = { version = "=1.0.2", features = ["init-if-needed"] }
+anchor-attribute-access-control = "=1.0.2"
+anchor-attribute-account = "=1.0.2"
+anchor-attribute-constant = "=1.0.2"
+anchor-attribute-error = "=1.0.2"
+anchor-attribute-event = "=1.0.2"
+anchor-attribute-program = "=1.0.2"
+anchor-derive-accounts = "=1.0.2"
+anchor-derive-serde = "=1.0.2"
+anchor-derive-space = "=1.0.2"
+anchor-syn = "=1.0.2"
 ephemeral-rollups-sdk = { git = "https://github.com/magicblock-labs/ephemeral-rollups-sdk.git", rev = "0fc4604157de51df28693e02e5a1a6a4a08c8a03", features = [
     "anchor",
     "crank",

@@ -7,7 +7,7 @@ pub const STARTING_EQUITY_MICRO_USD: i64 = 10_000_000_000;
 pub const HOT_STREAK_THRESHOLD: u8 = 3;
 pub const HOT_STREAK_BONUS_BPS: i128 = 500; // 5%
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq, Default)]
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq, Default, Debug)]
 pub enum ArenaStatus {
     #[default]
     Lobby,
@@ -15,7 +15,7 @@ pub enum ArenaStatus {
     Finished,
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq, Default)]
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq, Default, Debug)]
 pub enum PositionSide {
     #[default]
     Flat,
@@ -23,7 +23,7 @@ pub enum PositionSide {
     Short,
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq)]
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq, Debug)]
 pub enum TradeAction {
     OpenLong,
     OpenShort,
