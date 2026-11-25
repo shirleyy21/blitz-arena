@@ -411,6 +411,13 @@ export async function createAndLaunchOnchainArena(params: {
     params.operator,
   );
 
+  // Wait briefly for the MagicBlock ER validator to index the newly delegated Arena PDA
+  for (let attempt = 0; attempt < 10; attempt += 1) {
+    await new Promise((res) => setTimeout(res, 500));
+    const erAcc = await er.getAccountInfo(arena, "confirmed").catch(() => null);
+    if (erAcc && erAcc.owner.equals(PROGRAM_ID)) break;
+  }
+
   // 3. ER Schedule Native MagicBlock Crank (ticks every 2000ms for duration + 8s buffer)
   const iterations = Math.ceil((params.durationSecs + 8) / 2);
   const crankTxObj = await (erProgram as any).methods
@@ -489,7 +496,17 @@ export async function sendFinalizeAndUndelegate(params: {
     })
     .transaction();
 
-  return sendTxWithKeypair(er, tx, params.operator, [], "confirmed");
+  const result = await sendTxWithKeypair(er, tx, params.operator, [], "confirmed");
+
+  // Wait for Solana L1 to receive the committed Arena state & restored program ownership
+  const { base } = createConnections();
+  for (let attempt = 0; attempt < 12; attempt += 1) {
+    await new Promise((res) => setTimeout(res, 500));
+    const l1Acc = await base.getAccountInfo(arena, "confirmed").catch(() => null);
+    if (l1Acc && l1Acc.owner.equals(PROGRAM_ID)) break;
+  }
+
+  return result;
 }
 
 export async function sendClaimPrizeL1(params: {

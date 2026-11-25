@@ -42,7 +42,11 @@ Karena Windows kamu belum ada Rust/Solana/WSL, proyek ini sudah dilengkapi workf
 * **Categories:** `Games`, `DeFi`, `Consumer`
 * **Short Description (EN):**
   > Blitz Arena is a 60-second PvP micro-trading esports arena on Solana built for Entertainment Finance. Players escrow real SOL buy-ins on Solana L1, delegate the Arena PDA to MagicBlock Ephemeral Rollups (`devnet-as.magicblock.app`), and execute sub-50ms, zero-gas 10x–100x leveraged Long/Short/Flip trades against MagicBlock's live SOL/USD Ephemeral Oracle using zero-popup session keys. A native MagicBlock Scheduled Crank (`ScheduleCrankCpi`) ticks every 2 seconds to enforce real-time onchain liquidations (REKT) and automatically settles the highest-equity winner back to Solana L1 via `commit_and_undelegate` to claim the SOL pot.
-* **Program ID:** `F3af5wwcApM79ZjGTXQs5UdGqQ9aEgkxUVYA255HZGao` *(ganti jika memakai keypair baru saat deploy)*
+* **Program ID (LIVE ON DEVNET):** `F3af5wwcApM79ZjGTXQs5UdGqQ9aEgkxUVYA255HZGao`
+* **Program Explorer Link:** `https://explorer.solana.com/address/F3af5wwcApM79ZjGTXQs5UdGqQ9aEgkxUVYA255HZGao?cluster=devnet`
+* **Verified L1 Delegation TX:** `https://explorer.solana.com/tx/3MAfPikoeid8FqZSDENm1cUNoPDhhfybArt9KLnD7Y3GmddXgRfdcaeQapgniChB2r5Ns1ijcqpTtVnE54yzdp35?cluster=devnet`
+* **Verified L1 Prize Claim TX:** `https://explorer.solana.com/tx/VPAAzGQBj1vNfkBigrjtehWibGn7n7hk7eTqh72BJw64feYSconEhRSKjqJyf6Ld4ahR3uzB9eBHTNCwBTRh9Zg?cluster=devnet`
+* **Operator / Deployer Wallet:** `F7JgBNLSaBBfMpFEUnNZjWUcHaWN4JL2cA8mkkHPpWMU`
 * **ER Validator:** `MAS1Dt9qreoRMQ14YQuhg8UTZMMzDdKhmkZMECCzk57` (`https://devnet-as.magicblock.app`)
 * **Oracle Account:** `ENYwebBThHzmzwPLAQvCucUTsjyfBSZdD9ViXksS4jPu` (MagicBlock SOL/USD Ephemeral Oracle)
 

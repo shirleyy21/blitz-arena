@@ -79,11 +79,20 @@ bash scripts/deploy-devnet.sh
 
 ---
 
-## 📦 Devnet Configuration
+## 📦 Live Devnet Deployment & Verified Onchain Proof
 
-* **Program ID:** `F3af5wwcApM79ZjGTXQs5UdGqQ9aEgkxUVYA255HZGao`
+* **Program ID (Live on Solana Devnet):** [`F3af5wwcApM79ZjGTXQs5UdGqQ9aEgkxUVYA255HZGao`](https://explorer.solana.com/address/F3af5wwcApM79ZjGTXQs5UdGqQ9aEgkxUVYA255HZGao?cluster=devnet)
 * **Base Layer RPC:** `https://rpc.magicblock.app/devnet`
 * **ER Validator (Asia):** `MAS1Dt9qreoRMQ14YQuhg8UTZMMzDdKhmkZMECCzk57` (`https://devnet-as.magicblock.app`)
 * **SOL/USD Ephemeral Oracle:** `ENYwebBThHzmzwPLAQvCucUTsjyfBSZdD9ViXksS4jPu`
 * **Delegation Program:** `DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh`
 * **Magic Program:** `Magic11111111111111111111111111111111111111`
+
+### ✅ Verified End-to-End Onchain Run (Arena `#1795631852`)
+1. **L1 `create_arena` (SOL escrow in Vault PDA):** [`65BMPp…UQgujTD`](https://explorer.solana.com/tx/65BMPpPGsJ66PvLBMReTXUQcZ8vzxUsgHfKbdifdFqhokuqn1tYJoHCokf1ocsN9UHwiE6mU4ku1ybb62UQgujTD?cluster=devnet) *(122 ms)*
+2. **L1 `start_arena + delegate_arena` (L1 → MagicBlock ER):** [`3MAfPi…E54yzdp35`](https://explorer.solana.com/tx/3MAfPikoeid8FqZSDENm1cUNoPDhhfybArt9KLnD7Y3GmddXgRfdcaeQapgniChB2r5Ns1ijcqpTtVnE54yzdp35?cluster=devnet) *(118 ms)*
+3. **ER `schedule_round_crank` (2s ticks, auto-finalized after 7 ticks):** `4kbk2JYdkCch9uSB97pUv1vAQP5KAYbNRADJtvgQXRpKJtZyFQnYqeKb4ZdFghaBTAHuaiJsZByNNVbGDqSbThGn`
+4. **ER `trade(OpenLong 50x)` via Session Key (0 Gas):** `4tmYegW5Mz3VQCtTxwhWdEkK8tKymnes2BBZWmwnAjqZ8vftQsrf9m7C4hsCSe6vtSQH7PFWJYrkcps1g4TAkrdv` *(86 ms)*
+5. **ER `trade(Flip -> Short 50x)` via Session Key (0 Gas):** `5t98PU27ScFq7z3e9ZrrVqRMGaaueY5MWy9Aq3nW3RTexy8Vq6gwGxmhgztA7kAcuoAUB8qrAo2oAbMBys1HUTox` *(59 ms)*
+6. **ER `finalize_and_undelegate` (ER → L1 commit):** `MzZ3ApNNXjFZJAUHRamTE2y9BMV91D4cf5RPQg1DS5uow4xyLEwFTUB8Q6m4v8JsjFa9EN6DSNwASRMnryTxnWi` *(75 ms)*
+7. **L1 `claim_prize` (Vault SOL pot paid to Winner):** [`VPAAzG…BTRh9Zg`](https://explorer.solana.com/tx/VPAAzGQBj1vNfkBigrjtehWibGn7n7hk7eTqh72BJw64feYSconEhRSKjqJyf6Ld4ahR3uzB9eBHTNCwBTRh9Zg?cluster=devnet) *(430 ms)*
