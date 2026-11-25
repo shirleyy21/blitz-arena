@@ -39,6 +39,8 @@ Karena Windows kamu belum ada Rust/Solana/WSL, proyek ini sudah dilengkapi workf
 ## 3️⃣ Copy-Paste Form Submit (`build.magicblock.app/?stage=blitz#submit`)
 
 * **Project Name:** `Blitz Arena`
+* **Project Website (Live Demo):** `https://blitz-arena-nine.vercel.app/`
+* **GitHub Project Repo:** `https://github.com/shirleyy21/blitz-arena`
 * **Categories:** `Games`, `DeFi`, `Consumer`
 * **Short Description (EN):**
   > Blitz Arena is a 60-second PvP micro-trading esports arena on Solana built for Entertainment Finance. Players escrow real SOL buy-ins on Solana L1, delegate the Arena PDA to MagicBlock Ephemeral Rollups (`devnet-as.magicblock.app`), and execute sub-50ms, zero-gas 10x–100x leveraged Long/Short/Flip trades against MagicBlock's live SOL/USD Ephemeral Oracle using zero-popup session keys. A native MagicBlock Scheduled Crank (`ScheduleCrankCpi`) ticks every 2 seconds to enforce real-time onchain liquidations (REKT) and automatically settles the highest-equity winner back to Solana L1 via `commit_and_undelegate` to claim the SOL pot.

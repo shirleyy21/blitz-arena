@@ -174,8 +174,11 @@ export default function App() {
     return unsub;
   }, []);
 
-  // Check if Blitz Arena Anchor program is deployed on Devnet + check operator SOL
+  // Check if Blitz Arena Anchor program is deployed on Devnet + check operator SOL (once on mount)
+  const devnetCheckedRef = useRef(false);
   useEffect(() => {
+    if (devnetCheckedRef.current) return;
+    devnetCheckedRef.current = true;
     checkProgramDeployedOnDevnet().then((deployed) => {
       setProgramDeployed(deployed);
       if (deployed) {
@@ -188,7 +191,7 @@ export default function App() {
       }
     });
     fetchSolBalance(operatorKp.publicKey).then(setOperatorSol);
-  }, [operatorKp.publicKey, pushLog]);
+  }, [operatorKp, pushLog]);
 
   // High-frequency local countdown clock (100ms precision)
   useEffect(() => {

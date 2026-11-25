@@ -1,5 +1,8 @@
 # ⚡ BLITZ ARENA — 60s PvP Micro-Trading Sprint on Solana
 
+🌐 **Live Demo:** https://blitz-arena-nine.vercel.app/
+🔗 **Devnet Program ID:** [`F3af5wwcApM79ZjGTXQs5UdGqQ9aEgkxUVYA255HZGao`](https://explorer.solana.com/address/F3af5wwcApM79ZjGTXQs5UdGqQ9aEgkxUVYA255HZGao?cluster=devnet)
+
 **Built for Solana Blitz v10 (Theme: Entertainment Finance)** — powered by **MagicBlock Ephemeral Rollups**, **MagicBlock Ephemeral Oracle (SOL/USD)**, and **MagicBlock Scheduled Cranks**.
 
 > *Games are becoming markets, and markets are becoming entertainment.*
