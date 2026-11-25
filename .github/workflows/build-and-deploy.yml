@@ -94,8 +94,14 @@ jobs:
           solana config set --url https://api.devnet.solana.com
           solana address
           solana balance
-          anchor deploy --provider.cluster devnet
-          echo "DEPLOYED_PROGRAM_ID=$(solana address -k target/deploy/blitz_arena-keypair.json)"
+          if [ -f target/deploy/blitz_arena-keypair.json ]; then
+            anchor deploy --provider.cluster devnet --program-name blitz_arena --program-keypair target/deploy/blitz_arena-keypair.json
+          else
+            anchor deploy --provider.cluster devnet
+          fi
+          PROGRAM_ID=$(solana address -k target/deploy/blitz_arena-keypair.json)
+          echo "DEPLOYED_PROGRAM_ID=$PROGRAM_ID"
+          echo "EXPLORER=https://explorer.solana.com/address/$PROGRAM_ID?cluster=devnet"
 
   build-frontend:
     runs-on: ubuntu-latest
