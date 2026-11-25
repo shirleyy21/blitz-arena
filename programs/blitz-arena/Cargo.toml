@@ -1,0 +1,33 @@
+[package]
+name = "blitz-arena"
+version = "0.1.0"
+description = "60-second real-time PvP micro-trading arena on Solana using MagicBlock Ephemeral Rollups, Pyth Ephemeral Oracle, and Scheduled Cranks"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "blitz_arena"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build"]
+anchor-debug = []
+custom-heap = []
+custom-panic = []
+
+[dependencies]
+anchor-lang = { version = "=1.0.2", features = ["init-if-needed"] }
+ephemeral-rollups-sdk = { git = "https://github.com/magicblock-labs/ephemeral-rollups-sdk.git", rev = "0fc4604157de51df28693e02e5a1a6a4a08c8a03", features = [
+    "anchor",
+    "crank",
+] }
+pyth-solana-receiver-sdk = "=2.0.0"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = [
+    'cfg(target_os, values("solana"))',
+] }

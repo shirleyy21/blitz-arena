@@ -1,0 +1,13 @@
+{
+  "name": "blitz-arena",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Blitz Arena — 60s Real-Time PvP Micro-Trading Sprint on Solana powered by MagicBlock Ephemeral Rollups, Ephemeral Oracle & Cranks",
+  "scripts": {
+    "build": "anchor build --ignore-keys",
+    "test": "cargo +stable test --manifest-path tests-magicsvm-rs/Cargo.toml",
+    "app:dev": "npm --prefix app run dev",
+    "app:build": "npm --prefix app run build"
+  }
+}

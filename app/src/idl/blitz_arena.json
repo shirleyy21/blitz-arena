@@ -1,0 +1,663 @@
+{
+  "address": "F3af5wwcApM79ZjGTXQs5UdGqQ9aEgkxUVYA255HZGao",
+  "metadata": {
+    "name": "blitz_arena",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "60-second real-time PvP micro-trading arena on Solana using MagicBlock Ephemeral Rollups, Pyth Ephemeral Oracle, and Scheduled Cranks"
+  },
+  "instructions": [
+    {
+      "name": "create_arena",
+      "discriminator": [
+        174,
+        236,
+        45,
+        61,
+        197,
+        215,
+        149,
+        169
+      ],
+      "accounts": [
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "arena",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "arena_id",
+          "type": "u64"
+        },
+        {
+          "name": "entry_fee_lamports",
+          "type": "u64"
+        },
+        {
+          "name": "duration_secs",
+          "type": "i64"
+        },
+        {
+          "name": "max_players",
+          "type": "u8"
+        },
+        {
+          "name": "price_feed",
+          "type": "pubkey"
+        },
+        {
+          "name": "price_feed_id",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "session_key",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "join_arena",
+      "discriminator": [
+        135,
+        217,
+        203,
+        200,
+        93,
+        181,
+        131,
+        47
+      ],
+      "accounts": [
+        {
+          "name": "player",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "arena",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "arena_id",
+          "type": "u64"
+        },
+        {
+          "name": "session_key",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "start_arena",
+      "discriminator": [
+        76,
+        99,
+        3,
+        235,
+        111,
+        167,
+        248,
+        5
+      ],
+      "accounts": [
+        {
+          "name": "creator",
+          "signer": true
+        },
+        {
+          "name": "arena",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "arena_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "delegate_arena",
+      "discriminator": [
+        216,
+        55,
+        214,
+        212,
+        195,
+        162,
+        39,
+        100
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "buffer_arena",
+          "writable": true
+        },
+        {
+          "name": "delegation_record_arena",
+          "writable": true
+        },
+        {
+          "name": "delegation_metadata_arena",
+          "writable": true
+        },
+        {
+          "name": "arena",
+          "writable": true
+        },
+        {
+          "name": "owner_program"
+        },
+        {
+          "name": "delegation_program",
+          "address": "DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "arena_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "schedule_round_crank",
+      "discriminator": [
+        156,
+        56,
+        70,
+        180,
+        249,
+        136,
+        58,
+        163
+      ],
+      "accounts": [
+        {
+          "name": "magic_program",
+          "address": "Magic11111111111111111111111111111111111111"
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "arena",
+          "writable": true
+        },
+        {
+          "name": "price_update"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "arena_id",
+          "type": "u64"
+        },
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "ScheduleRoundCrankArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "trade",
+      "discriminator": [
+        178,
+        144,
+        26,
+        216,
+        241,
+        187,
+        206,
+        130
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "signer": true
+        },
+        {
+          "name": "arena",
+          "writable": true
+        },
+        {
+          "name": "price_update"
+        }
+      ],
+      "args": [
+        {
+          "name": "arena_id",
+          "type": "u64"
+        },
+        {
+          "name": "action",
+          "type": {
+            "defined": {
+              "name": "TradeAction"
+            }
+          }
+        },
+        {
+          "name": "leverage",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "crank_tick",
+      "discriminator": [
+        150,
+        187,
+        23,
+        252,
+        153,
+        201,
+        51,
+        133
+      ],
+      "accounts": [
+        {
+          "name": "arena",
+          "writable": true
+        },
+        {
+          "name": "price_update"
+        }
+      ],
+      "args": [
+        {
+          "name": "arena_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "finalize_and_undelegate",
+      "discriminator": [
+        36,
+        144,
+        38,
+        17,
+        63,
+        55,
+        113,
+        188
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "arena",
+          "writable": true
+        },
+        {
+          "name": "price_update"
+        },
+        {
+          "name": "magic_program",
+          "address": "Magic11111111111111111111111111111111111111"
+        },
+        {
+          "name": "magic_context",
+          "writable": true,
+          "address": "MagicContext1111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "arena_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "claim_prize",
+      "discriminator": [
+        157,
+        233,
+        139,
+        121,
+        246,
+        62,
+        234,
+        235
+      ],
+      "accounts": [
+        {
+          "name": "winner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "arena",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "arena_id",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Arena",
+      "discriminator": [
+        243,
+        215,
+        44,
+        44,
+        231,
+        211,
+        232,
+        168
+      ]
+    }
+  ],
+  "types": [
+    {
+      "name": "ArenaStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Lobby"
+          },
+          {
+            "name": "Active"
+          },
+          {
+            "name": "Finished"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PositionSide",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Flat"
+          },
+          {
+            "name": "Long"
+          },
+          {
+            "name": "Short"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TradeAction",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "OpenLong"
+          },
+          {
+            "name": "OpenShort"
+          },
+          {
+            "name": "Close"
+          },
+          {
+            "name": "Flip"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ScheduleRoundCrankArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "task_id",
+            "type": "i64"
+          },
+          {
+            "name": "execution_interval_millis",
+            "type": "i64"
+          },
+          {
+            "name": "iterations",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PlayerSlot",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "wallet",
+            "type": "pubkey"
+          },
+          {
+            "name": "session_key",
+            "type": "pubkey"
+          },
+          {
+            "name": "equity_micro_usd",
+            "type": "i64"
+          },
+          {
+            "name": "position_side",
+            "type": {
+              "defined": {
+                "name": "PositionSide"
+              }
+            }
+          },
+          {
+            "name": "leverage",
+            "type": "u8"
+          },
+          {
+            "name": "entry_price",
+            "type": "i64"
+          },
+          {
+            "name": "margin_micro_usd",
+            "type": "i64"
+          },
+          {
+            "name": "trades_count",
+            "type": "u16"
+          },
+          {
+            "name": "wins_count",
+            "type": "u16"
+          },
+          {
+            "name": "streak",
+            "type": "u8"
+          },
+          {
+            "name": "liquidated",
+            "type": "bool"
+          },
+          {
+            "name": "claimed",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Arena",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "arena_id",
+            "type": "u64"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "price_feed",
+            "type": "pubkey"
+          },
+          {
+            "name": "price_feed_id",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "entry_fee_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "pot_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "duration_secs",
+            "type": "i64"
+          },
+          {
+            "name": "start_ts",
+            "type": "i64"
+          },
+          {
+            "name": "end_ts",
+            "type": "i64"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": {
+                "name": "ArenaStatus"
+              }
+            }
+          },
+          {
+            "name": "player_count",
+            "type": "u8"
+          },
+          {
+            "name": "max_players",
+            "type": "u8"
+          },
+          {
+            "name": "crank_scheduled",
+            "type": "bool"
+          },
+          {
+            "name": "crank_ticks",
+            "type": "u32"
+          },
+          {
+            "name": "last_crank_price",
+            "type": "i64"
+          },
+          {
+            "name": "final_price",
+            "type": "i64"
+          },
+          {
+            "name": "winner",
+            "type": "pubkey"
+          },
+          {
+            "name": "winner_equity",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "vault_bump",
+            "type": "u8"
+          },
+          {
+            "name": "players",
+            "type": {
+              "array": [
+                {
+                  "defined": {
+                    "name": "PlayerSlot"
+                  }
+                },
+                8
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

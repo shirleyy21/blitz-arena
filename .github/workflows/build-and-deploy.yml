@@ -1,0 +1,111 @@
+name: Build, Test & Deploy Blitz Arena (Solana Devnet)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy_devnet:
+        description: "Deploy compiled program to Solana Devnet"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+jobs:
+  build-anchor-program:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust 1.89 (Anchor program build)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.89.0"
+
+      - name: Setup stable Rust (Anchor IDL & unit tests)
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default 1.89.0
+
+      - name: Install native deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libudev-dev pkg-config
+
+      - name: Install Solana Agave 3.1.9
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/v3.1.9/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+
+      - name: Install Anchor 1.0.2 (prebuilt binary)
+        run: |
+          curl -sSfL -o /tmp/anchor \
+            https://github.com/solana-foundation/anchor/releases/download/v1.0.2/anchor-1.0.2-x86_64-unknown-linux-gnu
+          sudo install -m 755 /tmp/anchor /usr/local/bin/anchor
+          anchor --version
+
+      - name: Cache Cargo & SBF build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            ~/.cache/solana
+            target
+          key: blitz-arena-${{ hashFiles('Cargo.toml', 'programs/**/Cargo.toml', 'programs/**/*.rs') }}
+          restore-keys: |
+            blitz-arena-
+
+      - name: Run Rust PnL & liquidation unit tests
+        run: cargo +stable test --manifest-path programs/blitz-arena/Cargo.toml
+
+      - name: Build Anchor SBF program & IDL
+        run: anchor build --ignore-keys
+
+      - name: Upload compiled program (.so) and IDL artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: blitz-arena-program-artifacts
+          path: |
+            target/deploy/blitz_arena.so
+            target/idl/blitz_arena.json
+
+      - name: Deploy to Solana Devnet (optional workflow_dispatch)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy_devnet == 'true' }}
+        env:
+          SOLANA_DEPLOYER_KEYPAIR: ${{ secrets.SOLANA_DEPLOYER_KEYPAIR }}
+          PROGRAM_KEYPAIR: ${{ secrets.PROGRAM_KEYPAIR }}
+        run: |
+          mkdir -p ~/.config/solana target/deploy
+          if [ -z "$SOLANA_DEPLOYER_KEYPAIR" ]; then
+            echo "ERROR: Add SOLANA_DEPLOYER_KEYPAIR secret (funded with ~3 Devnet SOL) in GitHub Repo Settings -> Secrets."
+            exit 1
+          fi
+          echo "$SOLANA_DEPLOYER_KEYPAIR" > ~/.config/solana/id.json
+          if [ -n "$PROGRAM_KEYPAIR" ]; then
+            echo "$PROGRAM_KEYPAIR" > target/deploy/blitz_arena-keypair.json
+          fi
+          solana config set --url https://api.devnet.solana.com
+          solana address
+          solana balance
+          anchor deploy --provider.cluster devnet
+          echo "DEPLOYED_PROGRAM_ID=$(solana address -k target/deploy/blitz_arena-keypair.json)"
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install & Build Frontend
+        working-directory: app
+        run: |
+          npm install
+          npm run build
