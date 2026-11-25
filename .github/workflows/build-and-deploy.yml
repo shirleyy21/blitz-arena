@@ -16,6 +16,10 @@ on:
           - "false"
           - "true"
 
+concurrency:
+  group: blitz-arena-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-anchor-program:
     runs-on: ubuntu-latest
@@ -76,30 +80,59 @@ jobs:
             target/deploy/blitz_arena.so
             target/idl/blitz_arena.json
 
-      - name: Deploy to Solana Devnet (optional workflow_dispatch)
-        if: ${{ (github.event_name == 'workflow_dispatch' && inputs.deploy_devnet == 'true') || contains(github.event.head_commit.message, '[deploy-devnet]') }}
+  deploy-devnet:
+    needs: build-anchor-program
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.deploy_devnet == 'true') || contains(github.event.head_commit.message, '[deploy-devnet]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download compiled program (.so) & IDL
+        uses: actions/download-artifact@v4
+        with:
+          name: blitz-arena-program-artifacts
+          path: target/deploy
+
+      - name: Install Solana Agave 3.1.9
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/v3.1.9/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+
+      - name: Deploy blitz_arena.so to Solana Devnet via HTTPS RPC (--use-rpc)
         env:
           SOLANA_DEPLOYER_KEYPAIR: ${{ secrets.SOLANA_DEPLOYER_KEYPAIR }}
           PROGRAM_KEYPAIR: ${{ secrets.PROGRAM_KEYPAIR }}
         run: |
           mkdir -p ~/.config/solana target/deploy
           if [ -z "$SOLANA_DEPLOYER_KEYPAIR" ]; then
-            echo "ERROR: Add SOLANA_DEPLOYER_KEYPAIR secret (funded with ~3 Devnet SOL) in GitHub Repo Settings -> Secrets."
+            echo "ERROR: SOLANA_DEPLOYER_KEYPAIR secret is missing."
             exit 1
           fi
           echo "$SOLANA_DEPLOYER_KEYPAIR" > ~/.config/solana/id.json
           if [ -n "$PROGRAM_KEYPAIR" ]; then
             echo "$PROGRAM_KEYPAIR" > target/deploy/blitz_arena-keypair.json
           fi
-          solana config set --url https://api.devnet.solana.com
+
+          RPC_URL="https://rpc.magicblock.app/devnet"
+          solana config set --url "$RPC_URL" --keypair ~/.config/solana/id.json
           solana address
           solana balance
-          if [ -f target/deploy/blitz_arena-keypair.json ]; then
-            anchor deploy --provider.cluster devnet --program-name blitz_arena --program-keypair target/deploy/blitz_arena-keypair.json
-          else
-            anchor deploy --provider.cluster devnet
-          fi
+
+          # Reclaim any orphaned buffer accounts from prior attempts
+          solana program close --buffers --bypass-warning || true
+          solana balance
+
+          # --use-rpc bypasses UDP/QUIC blocking on GitHub Actions runners
+          solana program deploy target/deploy/blitz_arena.so \
+            --program-id target/deploy/blitz_arena-keypair.json \
+            --url "$RPC_URL" \
+            --use-rpc \
+            --with-compute-unit-price 50000 \
+            --max-sign-attempts 100
+
           PROGRAM_ID=$(solana address -k target/deploy/blitz_arena-keypair.json)
+          solana program show "$PROGRAM_ID" --url "$RPC_URL"
           echo "DEPLOYED_PROGRAM_ID=$PROGRAM_ID"
           echo "EXPLORER=https://explorer.solana.com/address/$PROGRAM_ID?cluster=devnet"
 
